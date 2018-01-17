@@ -10,5 +10,8 @@ WORKDIR /go/src/github.com/runconduit/conduit
 COPY . .
 RUN dep ensure && dep prune
 
-# remove all of the non dep related files
-RUN find . -not -name 'Gopkg*' -not -path './vendor*' -delete
+FROM golang:1.9.1
+WORKDIR /go/src/github.com/runconduit/conduit
+COPY --from=build /usr/src/conduit/vendor     vendor
+COPY --from=build /usr/src/conduit/Gopkg.toml Gopkg.toml
+COPY --from=build /usr/src/conduit/Gopkg.lock Gopkg.lock
