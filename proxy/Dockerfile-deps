@@ -29,5 +29,5 @@ RUN cargo build -p conduit-proxy --release && rm target/release/conduit-proxy
 FROM rust:1.23.0
 WORKDIR /usr/src/conduit
 COPY --from=build /usr/src/conduit/target     target
-COPY --from=build /usr/src/conduit/Cargo.toml Cargo.lock
+COPY --from=build /usr/src/conduit/Cargo.toml Cargo.toml
 COPY --from=build /usr/src/conduit/Cargo.lock Cargo.lock
