@@ -12,6 +12,6 @@ RUN dep ensure && dep prune
 
 FROM golang:1.9.1
 WORKDIR /go/src/github.com/runconduit/conduit
-COPY --from=build /usr/src/conduit/vendor     vendor
-COPY --from=build /usr/src/conduit/Gopkg.toml Gopkg.toml
-COPY --from=build /usr/src/conduit/Gopkg.lock Gopkg.lock
+COPY --from=build /go/src/github.com/runconduit/conduit/vendor     vendor
+COPY --from=build /go/src/github.com/runconduit/conduit/Gopkg.toml Gopkg.toml
+COPY --from=build /go/src/github.com/runconduit/conduit/Gopkg.lock Gopkg.lock
