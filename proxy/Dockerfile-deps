@@ -8,7 +8,8 @@
 #          See https://github.com/runconduit/conduit/issues/115 for more
 #          information.
 
-FROM rust:1.23.0
+FROM rust:1.23.0 as build
+
 WORKDIR /usr/src/conduit
 COPY codegen ./codegen
 COPY futures-mpsc-lossy ./futures-mpsc-lossy
@@ -20,8 +21,13 @@ COPY tower-grpc ./tower-grpc
 COPY Cargo.toml Cargo.lock ./
 COPY proto ./proto
 COPY proxy ./proxy
-
 # Cache as much as possible; but don't keep aroud the artifact or things might get
 # confusing.
 RUN cargo build -p conduit-proxy           && rm target/debug/conduit-proxy
 RUN cargo build -p conduit-proxy --release && rm target/release/conduit-proxy
+
+FROM rust:1.23.0
+WORKDIR /usr/src/conduit
+COPY --from=build /usr/src/conduit/target     target
+COPY --from=build /usr/src/conduit/Cargo.toml Cargo.lock
+COPY --from=build /usr/src/conduit/Cargo.lock Cargo.lock
